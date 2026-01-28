@@ -1,0 +1,34 @@
+apiVersion: tekton.dev/v1beta1
+kind: PipelineRun
+metadata:
+  name: test-app-8-pipeline-run
+  annotations:
+    janus-idp.io/tekton: test-app-8-service
+spec:
+  serviceAccountName: pipeline
+  pipelineRef:
+    name: from-code-to-cluster
+  params:
+  - name: image-repo
+    value: index.docker.io/phamhoangkha1403/test-app-8-service
+  - name: app-repo-url
+    value: https://github.com/PhamHoangKha1403/test-app-8.git
+  - name: app-repo-revision
+    value: main
+  - name: gitops-repo-url
+    value: https://github.com/PhamHoangKha1403/test-app-8-gitops
+  - name: gitops-repo-branch
+    value: main
+  - name: manifest-path-in-gitops-repo
+    value: ./deployment.yaml
+  - name: docker-secret
+    value: docker-credentials 
+  workspaces:
+  - name: source
+    volumeClaimTemplate:
+      spec:
+        accessModes:
+        - ReadWriteOnce
+        resources:
+          requests:
+            storage: 1Gi
